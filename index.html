@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KNA BANK</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Kantumruy Pro', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#ecfeff',
+                            100: '#cffafe',
+                            500: '#06b6d4',
+                            600: '#0891b2',
+                            700: '#0e7490',
+                            800: '#155e75',
+                            900: '#164e63',
+                            dark: '#090d16'
+                        },
+                        khqr: '#e11d48'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Kantumruy Pro', sans-serif;
+            background-color: #050811;
+            color: #f8fafc;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .card-gradient-primary {
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .khqr-header {
+            background: linear-gradient(90deg, #d97706 0%, #e11d48 100%);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="flex justify-center items-center min-h-screen bg-slate-950 sm:py-4">
+
+    <div class="w-full max-w-md h-screen sm:h-[844px] bg-slate-900 sm:rounded-[44px] shadow-2xl flex flex-col overflow-hidden relative border-0 sm:border-8 border-slate-800">
+        
+        <!-- Status Bar -->
+        <div class="px-6 pt-3 pb-2 flex justify-between items-center text-xs text-slate-400 z-10 shrink-0">
+            <span id="current-time">09:41</span>
+            <div class="flex items-center space-x-2">
+                <span id="network-status" class="flex items-center text-[10px] text-emerald-400 space-x-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span>Live Cloud</span>
+                </span>
+                <i class="fa-solid fa-wifi"></i>
+                <i class="fa-solid fa-battery-full"></i>
+            </div>
+        </div>
+
+        <!-- Header -->
+        <header class="px-5 py-2 flex justify-between items-center z-10 shrink-0">
+            <div class="flex items-center space-x-3">
+                <button onclick="openSwitchAccountModal()" class="relative group">
+                    <div class="w-10 h-10 rounded-full p-0.5 bg-gradient-to-tr from-cyan-500 to-amber-400">
+                        <img id="header-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="User" class="w-full h-full object-cover rounded-full">
+                    </div>
+                    <span class="absolute -bottom-1 -right-1 bg-cyan-500 text-slate-900 w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-bold">
+                        <i class="fa-solid fa-users"></i>
+                    </span>
+                </button>
+                <div>
+                    <div class="flex items-center space-x-1 cursor-pointer" onclick="openSwitchAccountModal()">
+                        <h2 class="text-xs text-slate-400">ជម្រាបសួរ,</h2>
+                        <i class="fa-solid fa-chevron-down text-[10px] text-slate-400"></i>
+                    </div>
+                    <h1 id="header-username" class="text-sm font-bold text-white">កំពុងផ្ទុក...</h1>
+                </div>
+            </div>
+            <div class="flex space-x-2">
+                <button onclick="openSwitchAccountModal()" class="px-2.5 py-1.5 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-semibold hover:bg-cyan-500/20 flex items-center space-x-1.5">
+                    <i class="fa-solid fa-users-gear text-xs"></i>
+                    <span>គណនីទាំងអស់</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 overflow-y-auto hide-scrollbar p-5 space-y-6">
+
+            <!-- PAGE: DASHBOARD HOME -->
+            <section id="page-dashboard" class="space-y-5">
+                <!-- Balance Card -->
+                <div class="card-gradient-primary rounded-3xl p-5 text-white shadow-2xl relative overflow-hidden">
+                    <div class="absolute -right-8 -bottom-8 w-36 h-36 bg-cyan-500/10 rounded-full blur-2xl"></div>
+                    
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <span id="account-type-badge" class="text-[10px] font-bold uppercase tracking-wider bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 px-2 py-0.5 rounded-md">
+                                គណនីសន្សំ (Savings)
+                            </span>
+                            <p id="account-number-display" class="text-xs font-mono tracking-wider text-slate-300 mt-1">000 000 000</p>
+                        </div>
+                        <div class="flex items-center space-x-1 bg-slate-900/60 p-1 rounded-xl border border-slate-700/50">
+                            <button id="currency-btn-usd" onclick="setCurrencyView('USD')" class="px-2.5 py-1 rounded-lg text-xs font-bold transition bg-cyan-500 text-slate-900">USD</button>
+                            <button id="currency-btn-khr" onclick="setCurrencyView('KHR')" class="px-2.5 py-1 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white">KHR</button>
+                        </div>
+                    </div>
+
+                    <div class="space-y-1 my-3">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-xs text-slate-300">សមតុល្យដែលអាចប្រើបាន</span>
+                            <button onclick="toggleBalanceVisibility()" class="text-slate-400 hover:text-white">
+                                <i id="icon-eye" class="fa-regular fa-eye text-xs"></i>
+                            </button>
+                        </div>
+                        <div class="flex items-baseline space-x-2">
+                            <h2 id="balance-display" class="text-3xl font-bold tracking-tight">$0.00</h2>
+                            <span id="balance-currency-label" class="text-xs text-slate-300 font-bold">USD</span>
+                        </div>
+                    </div>
+
+                    <div class="pt-3 border-t border-slate-700/60 flex justify-between items-center text-xs text-slate-300">
+                        <span class="flex items-center space-x-1.5 text-emerald-400">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span>Real-time Sync Active</span>
+                        </span>
+                        <button onclick="switchTab('my-qr')" class="text-cyan-400 hover:underline flex items-center space-x-1 font-medium">
+                            <i class="fa-solid fa-qrcode"></i>
+                            <span>កូដ KHQR ខ្ញុំ</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Action Buttons Grid -->
+                <div class="grid grid-cols-4 gap-3">
+                    <button onclick="switchTab('scan')" class="flex flex-col items-center p-3 glass-card rounded-2xl hover:bg-slate-800/80 transition active:scale-95">
+                        <div class="w-12 h-12 rounded-2xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-xl mb-1.5 shadow-inner">
+                            <i class="fa-solid fa-qrcode"></i>
+                        </div>
+                        <span class="text-[11px] font-medium text-slate-300">ស្កែន QR</span>
+                    </button>
+
+                    <button onclick="switchTab('transfer')" class="flex flex-col items-center p-3 glass-card rounded-2xl hover:bg-slate-800/80 transition active:scale-95">
+                        <div class="w-12 h-12 rounded-2xl bg-blue-500/20 text-blue-400 flex items-center justify-center text-xl mb-1.5 shadow-inner">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </div>
+                        <span class="text-[11px] font-medium text-slate-300">ផ្ទេរប្រាក់</span>
+                    </button>
+
+                    <button onclick="switchTab('my-qr')" class="flex flex-col items-center p-3 glass-card rounded-2xl hover:bg-slate-800/80 transition active:scale-95">
+                        <div class="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl mb-1.5 shadow-inner">
+                            <i class="fa-solid fa-hand-holding-dollar"></i>
+                        </div>
+                        <span class="text-[11px] font-medium text-slate-300">ទទួលប្រាក់</span>
+                    </button>
+
+                    <button onclick="openSwitchAccountModal()" class="flex flex-col items-center p-3 glass-card rounded-2xl hover:bg-slate-800/80 transition active:scale-95">
+                        <div class="w-12 h-12 rounded-2xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-xl mb-1.5 shadow-inner">
+                            <i class="fa-solid fa-user-plus"></i>
+                        </div>
+                        <span class="text-[11px] font-medium text-slate-300">បន្ថែម Acc</span>
+                    </button>
+                </div>
+
+                <!-- Recent Transactions -->
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider">ប្រតិបត្តិការចុងក្រោយ (Live)</h3>
+                        <button onclick="switchTab('history')" class="text-xs text-cyan-400 hover:underline">មើលទាំងអស់</button>
+                    </div>
+
+                    <div id="dashboard-recent-txs" class="space-y-2">
+                        <!-- Dynamic Recent Transactions -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- PAGE: SCAN QR PAGE -->
+            <section id="page-scan" class="hidden space-y-5">
+                <div class="text-center space-y-1">
+                    <h2 class="text-lg font-bold text-white">ស្កែន KHQR ផ្ទេរប្រាក់</h2>
+                    <p class="text-xs text-slate-400">ស្កែន QR របស់មិត្តភក្តិដើម្បីផ្ទេរប្រាក់ភ្លាមៗតាម cloud</p>
+                </div>
+
+                <!-- Scanner Container -->
+                <div class="relative w-full aspect-square max-w-[280px] mx-auto bg-black rounded-3xl border-2 border-cyan-500/50 overflow-hidden shadow-2xl flex flex-col items-center justify-center">
+                    <div id="qr-reader" class="w-full h-full"></div>
+                    <div class="absolute inset-0 pointer-events-none border-[24px] border-black/40 flex items-center justify-center">
+                        <div class="w-full h-full border-2 border-cyan-400 rounded-xl relative">
+                            <div class="absolute top-0 left-0 w-4 h-4 border-t-4 border-l-4 border-cyan-400"></div>
+                            <div class="absolute top-0 right-0 w-4 h-4 border-t-4 border-r-4 border-cyan-400"></div>
+                            <div class="absolute bottom-0 left-0 w-4 h-4 border-b-4 border-l-4 border-cyan-400"></div>
+                            <div class="absolute bottom-0 right-0 w-4 h-4 border-b-4 border-r-4 border-cyan-400"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card p-4 rounded-2xl space-y-3">
+                    <p class="text-xs font-semibold text-slate-300 text-center">ជ្រើសរើសស្កែនទៅកាន់គណនីក្នុងប្រព័ន្ធ Live:</p>
+                    <div id="scan-quick-targets" class="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto">
+                        <!-- Dynamic scan targets from database -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- PAGE: MY QR PAGE -->
+            <section id="page-my-qr" class="hidden space-y-4">
+                <div class="text-center space-y-1">
+                    <h2 class="text-lg font-bold text-white">កូដ KHQR របស់ខ្ញុំ</h2>
+                    <p class="text-xs text-slate-400">បង្ហាញកូដនេះឱ្យអ្នកផ្សេងស្កែនផ្ញើលុយមកអ្នក</p>
+                </div>
+
+                <!-- KHQR Card Box -->
+                <div class="bg-white text-slate-900 rounded-3xl p-5 shadow-2xl max-w-xs mx-auto border-4 border-red-600 relative overflow-hidden">
+                    <div class="khqr-header text-white py-1.5 px-4 text-center font-bold text-xs -mx-5 -mt-5 mb-4 flex items-center justify-between">
+                        <span class="tracking-widest font-black text-sm">KHQR</span>
+                        <span class="text-[10px] opacity-80" id="my-qr-currency-badge">USD</span>
+                    </div>
+
+                    <div class="text-center space-y-0.5 mb-3">
+                        <h3 id="my-qr-name" class="font-bold text-slate-800 text-base">...</h3>
+                        <p id="my-qr-acc" class="text-xs text-slate-500 font-mono">000 000 000</p>
+                        <div id="my-qr-amount-display" class="hidden text-emerald-600 font-bold text-lg pt-1">
+                            $0.00
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-3 rounded-2xl border border-slate-200 flex justify-center shadow-inner my-2">
+                        <div id="qrcode-my-container" class="flex justify-center"></div>
+                    </div>
+
+                    <div class="text-center mt-3 pt-2 border-t border-slate-100">
+                        <p class="text-[10px] text-slate-400">ស្កែនតាមទូរស័ព្ទផ្សេងទៀតដើម្បីផ្ទេរប្រាក់ Live</p>
+                    </div>
+                </div>
+
+                <!-- Custom Amount Input for QR -->
+                <div class="glass-card p-3 rounded-2xl max-w-xs mx-auto space-y-2">
+                    <label class="text-[11px] text-slate-300 font-medium block">កំណត់ចំនួនទឹកប្រាក់ទារទារ (Optional):</label>
+                    <div class="flex space-x-2">
+                        <input type="number" id="qr-request-amount" placeholder="0.00" oninput="updateMyQrCode()" 
+                            class="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-500">
+                        <button onclick="clearQrAmount()" class="px-3 py-1.5 bg-slate-700 text-slate-300 rounded-xl text-xs hover:bg-slate-600">លុប</button>
+                    </div>
+                </div>
+
+                <div class="flex justify-center space-x-3 pt-1">
+                    <button onclick="copyCurrentAccount()" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-200 text-xs hover:bg-slate-700 flex items-center space-x-1.5">
+                        <i class="fa-regular fa-copy"></i>
+                        <span>ចម្លងលេខគណនី</span>
+                    </button>
+                    <button onclick="showToast('បានរក្សាទុក QR Code')" class="px-4 py-2 rounded-xl bg-cyan-600 text-white text-xs hover:bg-cyan-500 flex items-center space-x-1.5">
+                        <i class="fa-solid fa-download"></i>
+                        <span>រក្សាទុក</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- PAGE: TRANSFER MONEY PAGE -->
+            <section id="page-transfer" class="hidden space-y-4">
+                <div class="flex items-center space-x-3 mb-1">
+                    <button onclick="switchTab('dashboard')" class="text-slate-400 hover:text-white">
+                        <i class="fa-solid fa-arrow-left text-lg"></i>
+                    </button>
+                    <h2 class="text-lg font-bold text-white">ផ្ទេរប្រាក់ផ្ទាល់ (Live Transfer)</h2>
+                </div>
+
+                <form id="transfer-form" onsubmit="handleTransferSubmit(event)" class="space-y-4">
+                    <div class="space-y-1.5">
+                        <label class="text-xs text-slate-300 font-medium">ជ្រើសរើសអ្នកទទួល ឬបញ្ចូលលេខគណនី</label>
+                        <select id="transfer-recipient-select" onchange="onRecipientSelectChange()" required 
+                            class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-cyan-500">
+                            <option value="">-- ជ្រើសរើសគណនីអ្នកទទួល --</option>
+                        </select>
+                    </div>
+
+                    <div id="transfer-recipient-card" class="hidden glass-card p-3 rounded-2xl flex items-center space-x-3 border border-cyan-500/40 bg-cyan-500/10">
+                        <img id="transfer-recipient-img" src="" class="w-10 h-10 rounded-full object-cover">
+                        <div>
+                            <p class="text-[10px] text-cyan-400 font-semibold">គណនីផ្ញើទៅកាន់</p>
+                            <h4 id="transfer-recipient-name" class="text-xs font-bold text-white">...</h4>
+                            <p id="transfer-recipient-acc" class="text-[10px] font-mono text-slate-300">...</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <div class="flex justify-between items-center">
+                            <label class="text-xs text-slate-300 font-medium">ចំនួនទឹកប្រាក់</label>
+                            <span id="transfer-max-balance" class="text-[10px] text-slate-400">សមតុល្យ: $0.00</span>
+                        </div>
+                        <div class="flex space-x-2">
+                            <input type="number" id="transfer-amount" step="0.01" required placeholder="0.00" min="0.01"
+                                class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-cyan-500 font-mono text-lg font-bold">
+                            <select id="transfer-currency" class="bg-slate-800 border border-slate-700 rounded-xl px-3 text-xs text-white font-bold focus:outline-none focus:border-cyan-500">
+                                <option value="USD">USD ($)</option>
+                                <option value="KHR">KHR (៛)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-5 gap-1.5">
+                        <button type="button" onclick="setTransferQuickAmount(5)" class="py-2 rounded-xl bg-slate-800 text-slate-300 text-xs hover:bg-slate-700 font-medium">$5</button>
+                        <button type="button" onclick="setTransferQuickAmount(10)" class="py-2 rounded-xl bg-slate-800 text-slate-300 text-xs hover:bg-slate-700 font-medium">$10</button>
+                        <button type="button" onclick="setTransferQuickAmount(20)" class="py-2 rounded-xl bg-slate-800 text-slate-300 text-xs hover:bg-slate-700 font-medium">$20</button>
+                        <button type="button" onclick="setTransferQuickAmount(50)" class="py-2 rounded-xl bg-slate-800 text-slate-300 text-xs hover:bg-slate-700 font-medium">$50</button>
+                        <button type="button" onclick="setTransferQuickAmount(100)" class="py-2 rounded-xl bg-slate-800 text-slate-300 text-xs hover:bg-slate-700 font-medium">$100</button>
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="text-xs text-slate-300 font-medium">ចំណាំ (Remarks)</label>
+                        <input type="text" id="transfer-note" placeholder="ឧ. ផ្ញើថ្លៃបាយ, ថ្លៃកាហ្វេ..." 
+                            class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-cyan-500">
+                    </div>
+
+                    <button type="submit" class="w-full py-3.5 bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-bold rounded-2xl text-xs shadow-lg shadow-cyan-600/30 transition active:scale-[0.98] mt-2">
+                        បន្តការផ្ទេរប្រាក់ Live
+                    </button>
+                </form>
+            </section>
+
+            <!-- PAGE: TRANSACTION HISTORY PAGE -->
+            <section id="page-history" class="hidden space-y-4">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-lg font-bold text-white">ប្រវត្តិប្រតិបត្តិការ</h2>
+                    <span class="text-[10px] text-slate-400" id="history-account-owner">...</span>
+                </div>
+
+                <div class="flex bg-slate-800 p-1 rounded-2xl text-xs">
+                    <button id="filter-all" onclick="filterHistory('all')" class="flex-1 py-1.5 rounded-xl font-medium text-center transition bg-cyan-500 text-slate-950">ទាំងអស់</button>
+                    <button id="filter-in" onclick="filterHistory('in')" class="flex-1 py-1.5 rounded-xl font-medium text-center transition text-slate-400 hover:text-white">ចំណូល (+)</button>
+                    <button id="filter-out" onclick="filterHistory('out')" class="flex-1 py-1.5 rounded-xl font-medium text-center transition text-slate-400 hover:text-white">ចំណាយ (-)</button>
+                </div>
+
+                <div id="full-history-list" class="space-y-2">
+                    <!-- Dynamic Transaction History -->
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Navigation Bar -->
+        <nav class="bg-slate-950 border-t border-slate-800 px-4 py-2.5 flex justify-around items-center z-10 shrink-0">
+            <button id="nav-dashboard" onclick="switchTab('dashboard')" class="flex flex-col items-center space-y-1 text-cyan-400">
+                <i class="fa-solid fa-house text-base"></i>
+                <span class="text-[9px] font-medium">ទំព័រដើម</span>
+            </button>
+            <button id="nav-scan" onclick="switchTab('scan')" class="flex flex-col items-center space-y-1 text-slate-400 hover:text-slate-200">
+                <i class="fa-solid fa-qrcode text-base"></i>
+                <span class="text-[9px] font-medium">ស្កែន</span>
+            </button>
+            <button id="nav-my-qr" onclick="switchTab('my-qr')" class="flex flex-col items-center space-y-1 text-slate-400 hover:text-slate-200">
+                <i class="fa-solid fa-border-all text-base"></i>
+                <span class="text-[9px] font-medium">QR ខ្ញុំ</span>
+            </button>
+            <button id="nav-history" onclick="switchTab('history')" class="flex flex-col items-center space-y-1 text-slate-400 hover:text-slate-200">
+                <i class="fa-solid fa-clock-rotate-left text-base"></i>
+                <span class="text-[9px] font-medium">ប្រវត្តិ</span>
+            </button>
+            <button onclick="openSwitchAccountModal()" class="flex flex-col items-center space-y-1 text-slate-400 hover:text-slate-200">
+                <i class="fa-solid fa-users text-base"></i>
+                <span class="text-[9px] font-medium">គណនី</span>
+            </button>
+        </nav>
+
+        <!-- MODAL 1: Account Register & Switcher -->
+        <div id="modal-switch-account" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-end sm:items-center justify-center hidden">
+            <div class="w-full max-w-md bg-slate-900 rounded-t-3xl sm:rounded-3xl p-6 border border-slate-800 space-y-5 max-h-[85vh] overflow-y-auto">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h3 class="text-base font-bold text-white">គណនីក្នុងប្រព័ន្ធ Live Cloud</h3>
+                        <p class="text-xs text-slate-400">ជ្រើសរើសដើម្បីចូលប្រើ ឬបង្កើតគណនីថ្មី</p>
+                    </div>
+                    <button onclick="closeSwitchAccountModal()" class="w-8 h-8 rounded-full bg-slate-800 text-slate-400 flex items-center justify-center">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <div class="space-y-2" id="demo-accounts-list">
+                    <!-- Dynamic Cloud Accounts List -->
+                </div>
+
+                <div class="border-t border-slate-800 pt-4 space-y-3">
+                    <h4 class="text-xs font-bold text-slate-300">បង្កើតគណនី Demo ថ្មី (Multi-device Sync)</h4>
+                    <div class="space-y-2">
+                        <input type="text" id="new-acc-name" placeholder="ឈ្មោះម្ចាស់គណនី (ឧ. ចាន់ សុភា)" 
+                            class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500">
+                        <input type="text" id="new-acc-phone" placeholder="លេខទូរស័ព្ទ (ឧ. 012 345 678)" 
+                            class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500">
+                        <button onclick="createNewDemoAccount()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold">
+                            + បង្កើតគណនី (ទទួលបាន $500 & ៛2M)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL 2: 6-Digit PIN Security Screen -->
+        <div id="modal-pin" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-end sm:items-center justify-center hidden">
+            <div class="w-full max-w-md bg-slate-900 rounded-t-3xl sm:rounded-3xl p-6 border border-slate-800 space-y-6">
+                <div class="text-center space-y-1">
+                    <div class="w-12 h-12 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center mx-auto text-xl mb-2">
+                        <i class="fa-solid fa-lock"></i>
+                    </div>
+                    <h3 class="text-base font-bold text-white">បញ្ចូលលេខកូដ PIN សុវត្ថិភាព</h3>
+                    <p class="text-xs text-slate-400">វាយលេខ PIN 6 ខ្ទង់ (Default PIN: <span class="text-cyan-400 font-mono font-bold">123456</span>)</p>
+                </div>
+
+                <div class="flex justify-center space-x-3 py-1">
+                    <div class="pin-dot w-4 h-4 rounded-full border-2 border-slate-700 transition"></div>
+                    <div class="pin-dot w-4 h-4 rounded-full border-2 border-slate-700 transition"></div>
+                    <div class="pin-dot w-4 h-4 rounded-full border-2 border-slate-700 transition"></div>
+                    <div class="pin-dot w-4 h-4 rounded-full border-2 border-slate-700 transition"></div>
+                    <div class="pin-dot w-4 h-4 rounded-full border-2 border-slate-700 transition"></div>
+                    <div class="pin-dot w-4 h-4 rounded-full border-2 border-slate-700 transition"></div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-3 max-w-xs mx-auto">
+                    <button onclick="pressPin('1')" class="h-12 rounded-2xl bg-slate-800 hover:bg-slate-700 text-lg font-bold text-white">1</button>
+                    <button onclick="pressPin('2')" class="h-12 rounded-2xl bg-slate-800 hover:bg-slate-700 text-lg font-bold text-white">2</button>
+                    <button onclick="pressPin('3')" class="h-12 rounded-2xl bg-slate-800 hover:bg-slate-700 text-lg font-bold text-white">3</button>
+                    <button onclick="pressPin('4')" class="h-12 rounded-2xl bg-slate-800 hover:bg-slate-700 text-lg font-bold text-white">4</button>
+                    <button onclick="pressPin('5')" class="h-12 rounded-2xl bg-slate-800 hover:bg-slate-700 text-lg font-bold text-white">5</button>
+                    <button onclick="pressPin('6')" class="h-12 rounded-2xl bg-slate-800 hover:bg-slate-700 text-lg font-bold text-white">6</button>
+                    <button onclick="pressPin('7')" class="h-12 rounded-2xl bg-slate-800 hover:bg-slate-700 text-lg font-bold text-white">7</button>
+                    <button onclick="pressPin('8')" class="h-12 rounded-2xl bg-slate-800 hover:bg-slate-700 text-lg font-bold text-white">8</button>
+                    <button onclick="pressPin('9')" class="h-12 rounded-2xl bg-slate-800 hover:bg-slate-700 text-lg font-bold text-white">9</button>
+                    <button onclick="closePinModal()" class="h-12 rounded-2xl bg-transparent text-slate-400 text-xs font-semibold">បោះបង់</button>
+                    <button onclick="pressPin('0')" class="h-12 rounded-2xl bg-slate-800 hover:bg-slate-700 text-lg font-bold text-white">0</button>
+                    <button onclick="pressPin('del')" class="h-12 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center">
+                        <i class="fa-solid fa-backspace text-base"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL 3: Digital Receipt Popup -->
+        <div id="modal-receipt" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+            <div class="w-full max-w-xs bg-white text-slate-900 rounded-3xl p-5 space-y-4 shadow-2xl relative">
+                <div class="text-center space-y-1">
+                    <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-xl mb-1">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <h3 class="text-base font-bold text-slate-800">ផ្ទេរប្រាក់ជោគជ័យ!</h3>
+                    <p class="text-[10px] text-slate-500 font-mono" id="receipt-timestamp">...</p>
+                </div>
+
+                <div class="border-t border-b border-dashed border-slate-200 py-3 space-y-2 text-xs">
+                    <div class="flex justify-between">
+                        <span class="text-slate-500">អ្នកផ្ញើ:</span>
+                        <span id="receipt-sender" class="font-semibold text-slate-800">...</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-500">អ្នកទទួល:</span>
+                        <span id="receipt-receiver" class="font-semibold text-slate-800">...</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-500">លេខគណនី:</span>
+                        <span id="receipt-acc-num" class="font-mono text-slate-700">...</span>
+                    </div>
+                    <div class="flex justify-between items-center pt-1 border-t border-slate-100">
+                        <span class="text-slate-500">ចំនួនទឹកប្រាក់:</span>
+                        <span id="receipt-amount" class="font-bold text-emerald-600 text-base">...</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-500">ថ្លៃសេវា:</span>
+                        <span class="font-semibold text-slate-800">$0.00</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-500">ចំណាំ:</span>
+                        <span id="receipt-note" class="text-slate-700 italic">...</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-500">លេខយោង (ID):</span>
+                        <span id="receipt-ref-id" class="font-mono text-slate-600 text-[10px]">...</span>
+                    </div>
+                </div>
+
+                <button onclick="closeReceiptModal()" class="w-full py-2.5 bg-slate-900 text-white rounded-xl text-xs font-bold hover:bg-slate-800">
+                    រួចរាល់
+                </button>
+            </div>
+        </div>
+
+        <!-- Toast Banner -->
+        <div id="toast" class="fixed bottom-16 left-1/2 -translate-x-1/2 bg-slate-800/95 text-white text-xs px-4 py-2.5 rounded-full shadow-2xl border border-slate-700 flex items-center space-x-2 transition-all duration-300 opacity-0 pointer-events-none z-50 max-w-[90%]">
+            <i class="fa-solid fa-circle-info text-cyan-400"></i>
+            <span id="toast-msg">...</span>
+        </div>
+
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, onSnapshot, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Firebase Configuration setup
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'demo-mobile-banking';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' 
+            ? JSON.parse(__firebase_config) 
+            : { apiKey: "demo-api-key", authDomain: "demo.firebaseapp.com", projectId: "demo-project" };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // Firestore Path Helper
+        const PUBLIC_ACCOUNTS_COL = collection(db, 'artifacts', appId, 'public', 'data', 'accounts');
+
+        // Application State
+        let accountsMap = {}; // Stores live sync accounts by accountId
+        let currentAccountId = localStorage.getItem('mb_current_acc_id') || null;
+        let currentCurrencyView = 'USD';
+        let isBalanceVisible = true;
+        let currentPin = '';
+        let pendingTransferData = null;
+        let activeHistoryFilter = 'all';
+        let currentUser = null;
+
+        // Initialize Real-time Auth & Sync
+        window.addEventListener('DOMContentLoaded', async () => {
+            updateClock();
+            setInterval(updateClock, 1000);
+
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (err) {
+                console.warn("Auth initialization fallback:", err);
+            }
+
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    currentUser = user;
+                    setupRealtimeSync();
+                }
+            });
+        });
+
+        // Setup Firestore Listener
+        function setupRealtimeSync() {
+            onSnapshot(PUBLIC_ACCOUNTS_COL, (snapshot) => {
+                let updatedMap = {};
+                snapshot.forEach((docSnap) => {
+                    updatedMap[docSnap.id] = docSnap.data();
+                });
+
+                accountsMap = updatedMap;
+
+                // Create initial default accounts if database is empty
+                if (Object.keys(accountsMap).length === 0) {
+                    seedInitialCloudAccounts();
+                    return;
+                }
+
+                // If current account not set or deleted, select first available
+                if (!currentAccountId || !accountsMap[currentAccountId]) {
+                    currentAccountId = Object.keys(accountsMap)[0];
+                    localStorage.setItem('mb_current_acc_id', currentAccountId);
+                }
+
+                updateUI();
+            }, (error) => {
+                console.error("Firestore listener error:", error);
+            });
+        }
+
+        async function seedInitialCloudAccounts() {
+            const defaults = [
+                {
+                    id: '001234567',
+                    name: 'សុខា (Sokha)',
+                    phone: '012 345 678',
+                    accountNumber: '001 234 567',
+                    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
+                    balanceUSD: 1250.00,
+                    balanceKHR: 5000000,
+                    pin: '123456',
+                    transactions: [
+                        { id: 'TX101', type: 'in', sender: 'ដារ៉ា (Dara)', receiver: 'សុខា (Sokha)', amount: 50, currency: 'USD', note: 'សងថ្លៃបាយ', date: 'ថ្ងៃនេះ, 09:15 AM' }
+                    ]
+                },
+                {
+                    id: '002888999',
+                    name: 'បុប្ផា (Bopha)',
+                    phone: '098 765 432',
+                    accountNumber: '002 888 999',
+                    avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=150&q=80',
+                    balanceUSD: 820.50,
+                    balanceKHR: 3200000,
+                    pin: '123456',
+                    transactions: []
+                },
+                {
+                    id: '003555111',
+                    name: 'ដារ៉ា (Dara)',
+                    phone: '077 111 222',
+                    accountNumber: '003 555 111',
+                    avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=150&q=80',
+                    balanceUSD: 2400.00,
+                    balanceKHR: 9800000,
+                    pin: '123456',
+                    transactions: [
+                        { id: 'TX101', type: 'out', sender: 'ដារ៉ា (Dara)', receiver: 'សុខា (Sokha)', amount: 50, currency: 'USD', note: 'សងថ្លៃបាយ', date: 'ថ្ងៃនេះ, 09:15 AM' }
+                    ]
+                }
+            ];
+
+            for (const acc of defaults) {
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'accounts', acc.id);
+                await setDoc(docRef, acc);
+            }
+        }
+
+        function getCurrentAccount() {
+            return accountsMap[currentAccountId] || null;
+        }
+
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('current-time').innerText = `${hours}:${minutes}`;
+        }
+
+        window.updateUI = function() {
+            const acc = getCurrentAccount();
+            if (!acc) return;
+
+            document.getElementById('header-username').innerText = acc.name;
+            document.getElementById('header-avatar').src = acc.avatar;
+            document.getElementById('account-number-display').innerText = acc.accountNumber;
+
+            renderBalanceDisplay();
+            renderDashboardRecentTxs();
+            updateMyQrCode();
+            populateTransferRecipients();
+            document.getElementById('history-account-owner').innerText = `ម្ចាស់: ${acc.name}`;
+            renderHistoryList();
+            renderDemoAccountsList();
+            renderScanTargets();
+        };
+
+        function renderBalanceDisplay() {
+            const acc = getCurrentAccount();
+            if (!acc) return;
+
+            const balEl = document.getElementById('balance-display');
+            const labelEl = document.getElementById('balance-currency-label');
+
+            labelEl.innerText = currentCurrencyView;
+
+            if (!isBalanceVisible) {
+                balEl.innerText = '••••••••';
+                return;
+            }
+
+            if (currentCurrencyView === 'USD') {
+                balEl.innerText = `$${acc.balanceUSD.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            } else {
+                balEl.innerText = `៛ ${acc.balanceKHR.toLocaleString('en-US')}`;
+            }
+
+            document.getElementById('transfer-max-balance').innerText = `សមតុល្យ: $${acc.balanceUSD.toFixed(2)} / ៛${acc.balanceKHR.toLocaleString()}`;
+        }
+
+        window.setCurrencyView = function(curr) {
+            currentCurrencyView = curr;
+            document.getElementById('currency-btn-usd').className = curr === 'USD' 
+                ? 'px-2.5 py-1 rounded-lg text-xs font-bold transition bg-cyan-500 text-slate-900' 
+                : 'px-2.5 py-1 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white';
+            document.getElementById('currency-btn-khr').className = curr === 'KHR' 
+                ? 'px-2.5 py-1 rounded-lg text-xs font-bold transition bg-cyan-500 text-slate-900' 
+                : 'px-2.5 py-1 rounded-lg text-xs font-bold transition text-slate-400 hover:text-white';
+            renderBalanceDisplay();
+        };
+
+        window.toggleBalanceVisibility = function() {
+            isBalanceVisible = !isBalanceVisible;
+            document.getElementById('icon-eye').className = isBalanceVisible ? 'fa-regular fa-eye text-xs' : 'fa-regular fa-eye-slash text-xs';
+            renderBalanceDisplay();
+        };
+
+        function renderDashboardRecentTxs() {
+            const acc = getCurrentAccount();
+            const container = document.getElementById('dashboard-recent-txs');
+            
+            if (!acc || !acc.transactions || acc.transactions.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-500 text-center py-4">មិនទាន់មានប្រតិបត្តិការនៅឡើយ</p>`;
+                return;
+            }
+
+            const recent = acc.transactions.slice(0, 3);
+            container.innerHTML = recent.map(tx => {
+                const isIncoming = tx.type === 'in';
+                const sign = isIncoming ? '+' : '-';
+                const amountText = tx.currency === 'USD' ? `${sign}$${tx.amount.toFixed(2)}` : `${sign}៛${tx.amount.toLocaleString()}`;
+                const title = isIncoming ? `ពី: ${tx.sender}` : `ទៅ: ${tx.receiver}`;
+
+                return `
+                    <div onclick="showReceiptDetails('${tx.id}')" class="glass-card p-3 rounded-2xl flex items-center justify-between cursor-pointer hover:bg-slate-800/60 transition">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-9 h-9 rounded-xl ${isIncoming ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'} flex items-center justify-center text-sm">
+                                <i class="fa-solid ${isIncoming ? 'fa-arrow-down-left' : 'fa-arrow-up-right'}"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-white">${title}</h4>
+                                <p class="text-[10px] text-slate-400">${tx.date} • ${tx.note}</p>
+                            </div>
+                        </div>
+                        <span class="text-xs font-bold font-mono ${isIncoming ? 'text-emerald-400' : 'text-slate-200'}">
+                            ${amountText}
+                        </span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        window.updateMyQrCode = function() {
+            const acc = getCurrentAccount();
+            if (!acc) return;
+
+            document.getElementById('my-qr-name').innerText = acc.name.toUpperCase();
+            document.getElementById('my-qr-acc').innerText = acc.accountNumber;
+
+            const reqAmt = parseFloat(document.getElementById('qr-request-amount').value);
+            const displayAmt = document.getElementById('my-qr-amount-display');
+
+            let qrPayload = `KHQR:${acc.id}:${acc.accountNumber}`;
+            if (reqAmt && reqAmt > 0) {
+                qrPayload += `:USD:${reqAmt}`;
+                displayAmt.innerText = `$${reqAmt.toFixed(2)}`;
+                displayAmt.classList.remove('hidden');
+            } else {
+                displayAmt.classList.add('hidden');
+            }
+
+            const qrContainer = document.getElementById("qrcode-my-container");
+            qrContainer.innerHTML = "";
+            new QRCode(qrContainer, {
+                text: qrPayload,
+                width: 170,
+                height: 170,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+        };
+
+        window.clearQrAmount = function() {
+            document.getElementById('qr-request-amount').value = '';
+            updateMyQrCode();
+        };
+
+        window.copyCurrentAccount = function() {
+            const acc = getCurrentAccount();
+            if (acc) copyToClipboard(acc.accountNumber);
+        };
+
+        function populateTransferRecipients() {
+            const select = document.getElementById('transfer-recipient-select');
+            const otherAccounts = Object.values(accountsMap).filter(a => a.id !== currentAccountId);
+
+            select.innerHTML = `<option value="">-- ជ្រើសរើសគណនីអ្នកទទួល --</option>` + 
+                otherAccounts.map(a => `<option value="${a.id}">${a.name} (${a.accountNumber})</option>`).join('');
+        }
+
+        window.onRecipientSelectChange = function() {
+            const targetId = document.getElementById('transfer-recipient-select').value;
+            const card = document.getElementById('transfer-recipient-card');
+
+            if (!targetId || !accountsMap[targetId]) {
+                card.classList.add('hidden');
+                return;
+            }
+
+            const targetAcc = accountsMap[targetId];
+            document.getElementById('transfer-recipient-img').src = targetAcc.avatar;
+            document.getElementById('transfer-recipient-name').innerText = targetAcc.name;
+            document.getElementById('transfer-recipient-acc').innerText = targetAcc.accountNumber;
+            card.classList.remove('hidden');
+        };
+
+        window.setTransferQuickAmount = function(amt) {
+            document.getElementById('transfer-amount').value = amt;
+        };
+
+        function renderScanTargets() {
+            const container = document.getElementById('scan-quick-targets');
+            const others = Object.values(accountsMap).filter(a => a.id !== currentAccountId);
+
+            if (others.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-500 col-span-2 text-center py-2">គ្មានគណនីផ្សេងទៀត</p>`;
+                return;
+            }
+
+            container.innerHTML = others.map(a => `
+                <button onclick="simulateScanAccount('${a.id}')" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-left flex items-center space-x-2 border border-slate-700/60">
+                    <img src="${a.avatar}" class="w-7 h-7 rounded-full object-cover">
+                    <div class="overflow-hidden">
+                        <p class="text-xs font-bold text-white truncate">${a.name}</p>
+                        <p class="text-[9px] text-cyan-400 font-mono">ស្កែន QR</p>
+                    </div>
+                </button>
+            `).join('');
+        }
+
+        window.simulateScanAccount = function(targetId) {
+            const targetAcc = accountsMap[targetId];
+            if (!targetAcc) return;
+            switchTab('transfer');
+            document.getElementById('transfer-recipient-select').value = targetId;
+            onRecipientSelectChange();
+            showToast(`ស្កែនបានជោគជ័យ QR របស់ ${targetAcc.name}`);
+        };
+
+        window.handleTransferSubmit = function(e) {
+            e.preventDefault();
+            const senderAcc = getCurrentAccount();
+            const recipientId = document.getElementById('transfer-recipient-select').value;
+            const amount = parseFloat(document.getElementById('transfer-amount').value);
+            const currency = document.getElementById('transfer-currency').value;
+            const note = document.getElementById('transfer-note').value.trim() || 'ផ្ទេរប្រាក់';
+
+            if (!recipientId || !accountsMap[recipientId]) {
+                showToast("សូមជ្រើសរើសអ្នកទទួលប្រាក់");
+                return;
+            }
+
+            if (!amount || amount <= 0) {
+                showToast("សូមបញ្ចូលចំនួនទឹកប្រាក់ដែលត្រឹមត្រូវ");
+                return;
+            }
+
+            if (currency === 'USD' && amount > senderAcc.balanceUSD) {
+                showToast("សមតុល្យ USD មិនគ្រប់គ្រាន់ទេ!");
+                return;
+            }
+            if (currency === 'KHR' && amount > senderAcc.balanceKHR) {
+                showToast("សមតុល្យ KHR មិនគ្រប់គ្រាន់ទេ!");
+                return;
+            }
+
+            const receiverAcc = accountsMap[recipientId];
+
+            pendingTransferData = {
+                senderId: senderAcc.id,
+                receiverId: receiverAcc.id,
+                senderName: senderAcc.name,
+                receiverName: receiverAcc.name,
+                receiverAccNum: receiverAcc.accountNumber,
+                amount: amount,
+                currency: currency,
+                note: note
+            };
+
+            openPinModal();
+        };
+
+        window.openPinModal = function() {
+            currentPin = '';
+            updatePinDots();
+            document.getElementById('modal-pin').classList.remove('hidden');
+        };
+
+        window.closePinModal = function() {
+            document.getElementById('modal-pin').classList.add('hidden');
+        };
+
+        window.pressPin = function(val) {
+            if (val === 'del') {
+                currentPin = currentPin.slice(0, -1);
+            } else if (currentPin.length < 6) {
+                currentPin += val;
+            }
+
+            updatePinDots();
+
+            if (currentPin.length === 6) {
+                setTimeout(verifyAndExecuteTransfer, 200);
+            }
+        };
+
+        function updatePinDots() {
+            const dots = document.querySelectorAll('.pin-dot');
+            dots.forEach((dot, index) => {
+                if (index < currentPin.length) {
+                    dot.classList.add('bg-cyan-400', 'border-cyan-400');
+                } else {
+                    dot.classList.remove('bg-cyan-400', 'border-cyan-400');
+                }
+            });
+        }
+
+        async function verifyAndExecuteTransfer() {
+            closePinModal();
+
+            if (!pendingTransferData || !currentUser) return;
+
+            const sender = accountsMap[pendingTransferData.senderId];
+            const receiver = accountsMap[pendingTransferData.receiverId];
+
+            if (!sender || !receiver) return;
+
+            const txId = 'TRX' + Math.floor(100000 + Math.random() * 900000);
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const dateStr = `ថ្ងៃនេះ, ${timeStr}`;
+
+            let senderUSD = sender.balanceUSD;
+            let senderKHR = sender.balanceKHR;
+            let receiverUSD = receiver.balanceUSD;
+            let receiverKHR = receiver.balanceKHR;
+
+            if (pendingTransferData.currency === 'USD') {
+                senderUSD -= pendingTransferData.amount;
+                receiverUSD += pendingTransferData.amount;
+            } else {
+                senderKHR -= pendingTransferData.amount;
+                receiverKHR += pendingTransferData.amount;
+            }
+
+            const senderTx = {
+                id: txId,
+                type: 'out',
+                sender: sender.name,
+                receiver: receiver.name,
+                receiverAccNum: receiver.accountNumber,
+                amount: pendingTransferData.amount,
+                currency: pendingTransferData.currency,
+                note: pendingTransferData.note,
+                date: dateStr
+            };
+
+            const receiverTx = {
+                id: txId,
+                type: 'in',
+                sender: sender.name,
+                receiver: receiver.name,
+                receiverAccNum: receiver.accountNumber,
+                amount: pendingTransferData.amount,
+                currency: pendingTransferData.currency,
+                note: pendingTransferData.note,
+                date: dateStr
+            };
+
+            const newSenderTxs = [senderTx, ...(sender.transactions || [])];
+            const newReceiverTxs = [receiverTx, ...(receiver.transactions || [])];
+
+            // Update database real-time for both sender and receiver
+            try {
+                const senderRef = doc(db, 'artifacts', appId, 'public', 'data', 'accounts', sender.id);
+                const receiverRef = doc(db, 'artifacts', appId, 'public', 'data', 'accounts', receiver.id);
+
+                await updateDoc(senderRef, {
+                    balanceUSD: senderUSD,
+                    balanceKHR: senderKHR,
+                    transactions: newSenderTxs
+                });
+
+                await updateDoc(receiverRef, {
+                    balanceUSD: receiverUSD,
+                    balanceKHR: receiverKHR,
+                    transactions: newReceiverTxs
+                });
+
+                // Populate Receipt Modal
+                document.getElementById('receipt-timestamp').innerText = `${now.toLocaleDateString('km-KH')} ${timeStr}`;
+                document.getElementById('receipt-sender').innerText = sender.name;
+                document.getElementById('receipt-receiver').innerText = receiver.name;
+                document.getElementById('receipt-acc-num').innerText = receiver.accountNumber;
+                document.getElementById('receipt-amount').innerText = pendingTransferData.currency === 'USD' 
+                    ? `$${pendingTransferData.amount.toFixed(2)}` 
+                    : `៛${pendingTransferData.amount.toLocaleString()}`;
+                document.getElementById('receipt-note').innerText = pendingTransferData.note;
+                document.getElementById('receipt-ref-id').innerText = txId;
+
+                document.getElementById('modal-receipt').classList.remove('hidden');
+
+                document.getElementById('transfer-form').reset();
+                document.getElementById('transfer-recipient-card').classList.add('hidden');
+                showToast("ផ្ទេរប្រាក់ Live បានជោគជ័យ!");
+            } catch (err) {
+                console.error("Transfer failed:", err);
+                showToast("មានបញ្ហាក្នុងការផ្ទេរប្រាក់ សូមព្យាយាមម្តងទៀត");
+            }
+        }
+
+        window.closeReceiptModal = function() {
+            document.getElementById('modal-receipt').classList.add('hidden');
+            switchTab('dashboard');
+        };
+
+        window.showReceiptDetails = function(txId) {
+            const acc = getCurrentAccount();
+            if (!acc || !acc.transactions) return;
+            const tx = acc.transactions.find(t => t.id === txId);
+            if (!tx) return;
+
+            document.getElementById('receipt-timestamp').innerText = tx.date;
+            document.getElementById('receipt-sender').innerText = tx.sender;
+            document.getElementById('receipt-receiver').innerText = tx.receiver;
+            document.getElementById('receipt-acc-num').innerText = tx.receiverAccNum || '000 000 000';
+            document.getElementById('receipt-amount').innerText = tx.currency === 'USD' 
+                ? `$${tx.amount.toFixed(2)}` 
+                : `៛${tx.amount.toLocaleString()}`;
+            document.getElementById('receipt-note').innerText = tx.note;
+            document.getElementById('receipt-ref-id').innerText = tx.id;
+
+            document.getElementById('modal-receipt').classList.remove('hidden');
+        };
+
+        window.filterHistory = function(filterType) {
+            activeHistoryFilter = filterType;
+            
+            document.getElementById('filter-all').className = filterType === 'all' 
+                ? 'flex-1 py-1.5 rounded-xl font-medium text-center transition bg-cyan-500 text-slate-950' 
+                : 'flex-1 py-1.5 rounded-xl font-medium text-center transition text-slate-400 hover:text-white';
+            document.getElementById('filter-in').className = filterType === 'in' 
+                ? 'flex-1 py-1.5 rounded-xl font-medium text-center transition bg-emerald-500 text-slate-950' 
+                : 'flex-1 py-1.5 rounded-xl font-medium text-center transition text-slate-400 hover:text-white';
+            document.getElementById('filter-out').className = filterType === 'out' 
+                ? 'flex-1 py-1.5 rounded-xl font-medium text-center transition bg-red-500 text-white' 
+                : 'flex-1 py-1.5 rounded-xl font-medium text-center transition text-slate-400 hover:text-white';
+
+            renderHistoryList();
+        };
+
+        function renderHistoryList() {
+            const acc = getCurrentAccount();
+            const container = document.getElementById('full-history-list');
+
+            if (!acc || !acc.transactions) {
+                container.innerHTML = `<p class="text-xs text-slate-500 text-center py-8">គ្មានប្រវត្តិប្រតិបត្តិការឡើយ</p>`;
+                return;
+            }
+
+            let filtered = acc.transactions;
+            if (activeHistoryFilter === 'in') {
+                filtered = acc.transactions.filter(t => t.type === 'in');
+            } else if (activeHistoryFilter === 'out') {
+                filtered = acc.transactions.filter(t => t.type === 'out');
+            }
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-500 text-center py-8">គ្មានប្រវត្តិប្រតិបត្តិការឡើយ</p>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map(tx => {
+                const isIncoming = tx.type === 'in';
+                const sign = isIncoming ? '+' : '-';
+                const amountText = tx.currency === 'USD' ? `${sign}$${tx.amount.toFixed(2)}` : `${sign}៛${tx.amount.toLocaleString()}`;
+                const title = isIncoming ? `ពី: ${tx.sender}` : `ទៅ: ${tx.receiver}`;
+
+                return `
+                    <div onclick="showReceiptDetails('${tx.id}')" class="glass-card p-3 rounded-2xl flex items-center justify-between cursor-pointer hover:bg-slate-800/80 transition">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-xl ${isIncoming ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'} flex items-center justify-center text-base">
+                                <i class="fa-solid ${isIncoming ? 'fa-arrow-down-left' : 'fa-arrow-up-right'}"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-white">${title}</h4>
+                                <p class="text-[10px] text-slate-400">${tx.date} • ${tx.note}</p>
+                            </div>
+                        </div>
+                        <span class="text-xs font-bold font-mono ${isIncoming ? 'text-emerald-400' : 'text-slate-200'}">
+                            ${amountText}
+                        </span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        window.openSwitchAccountModal = function() {
+            renderDemoAccountsList();
+            document.getElementById('modal-switch-account').classList.remove('hidden');
+        };
+
+        window.closeSwitchAccountModal = function() {
+            document.getElementById('modal-switch-account').classList.add('hidden');
+        };
+
+        function renderDemoAccountsList() {
+            const container = document.getElementById('demo-accounts-list');
+            const accountsList = Object.values(accountsMap);
+
+            container.innerHTML = accountsList.map(a => {
+                const isActive = a.id === currentAccountId;
+                return `
+                    <div onclick="switchActiveAccount('${a.id}')" class="p-3 rounded-2xl flex items-center justify-between cursor-pointer border transition ${isActive ? 'bg-cyan-500/10 border-cyan-500' : 'bg-slate-800/60 border-slate-700/60 hover:bg-slate-800'}">
+                        <div class="flex items-center space-x-3">
+                            <img src="${a.avatar}" class="w-10 h-10 rounded-full object-cover">
+                            <div>
+                                <div class="flex items-center space-x-2">
+                                    <h4 class="text-xs font-bold text-white">${a.name}</h4>
+                                    ${isActive ? '<span class="text-[9px] bg-cyan-500 text-slate-900 font-bold px-1.5 py-0.2 rounded">កំពុងប្រើ</span>' : ''}
+                                </div>
+                                <p class="text-[10px] font-mono text-slate-400">${a.accountNumber}</p>
+                            </div>
+                        </div>
+                        <div class="text-right font-mono text-xs font-bold text-slate-200">
+                            <div>$${a.balanceUSD.toFixed(2)}</div>
+                            <div class="text-[10px] text-slate-400 font-normal">៛${a.balanceKHR.toLocaleString()}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        window.switchActiveAccount = function(accId) {
+            currentAccountId = accId;
+            localStorage.setItem('mb_current_acc_id', accId);
+            closeSwitchAccountModal();
+            updateUI();
+            const acc = getCurrentAccount();
+            if (acc) showToast(`បានប្តូរទៅគណនី: ${acc.name}`);
+        };
+
+        window.createNewDemoAccount = async function() {
+            const nameInput = document.getElementById('new-acc-name');
+            const phoneInput = document.getElementById('new-acc-phone');
+            const name = nameInput.value.trim();
+            const phone = phoneInput.value.trim() || '012 000 000';
+
+            if (!name) {
+                showToast("សូមបញ្ចូលឈ្មោះគណនី!");
+                return;
+            }
+
+            const cleanId = '00' + Math.floor(1000000 + Math.random() * 9000000);
+            const formattedAccNum = cleanId.replace(/(\d{3})(\d{3})(\d{3})/, '$1 $2 $3');
+
+            const newAcc = {
+                id: cleanId,
+                name: name,
+                phone: phone,
+                accountNumber: formattedAccNum,
+                avatar: `https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80`,
+                balanceUSD: 500.00,
+                balanceKHR: 2000000,
+                pin: '123456',
+                transactions: []
+            };
+
+            try {
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'accounts', cleanId);
+                await setDoc(docRef, newAcc);
+
+                nameInput.value = '';
+                phoneInput.value = '';
+                switchActiveAccount(cleanId);
+                showToast(`បានបង្កើតគណនី ${name} លើ Cloud ជោគជ័យ ($500)`);
+            } catch (err) {
+                console.error("Create account failed:", err);
+                showToast("បរាជ័យក្នុងការបង្កើតគណនី!");
+            }
+        };
+
+        window.switchTab = function(tab) {
+            document.getElementById('page-dashboard').classList.add('hidden');
+            document.getElementById('page-scan').classList.add('hidden');
+            document.getElementById('page-my-qr').classList.add('hidden');
+            document.getElementById('page-transfer').classList.add('hidden');
+            document.getElementById('page-history').classList.add('hidden');
+
+            const navs = ['dashboard', 'scan', 'my-qr', 'history'];
+            navs.forEach(n => {
+                const btn = document.getElementById(`nav-${n}`);
+                if (btn) btn.className = 'flex flex-col items-center space-y-1 text-slate-400 hover:text-slate-200';
+            });
+
+            if (tab === 'dashboard') {
+                document.getElementById('page-dashboard').classList.remove('hidden');
+                document.getElementById('nav-dashboard').className = 'flex flex-col items-center space-y-1 text-cyan-400';
+            } else if (tab === 'scan') {
+                document.getElementById('page-scan').classList.remove('hidden');
+                document.getElementById('nav-scan').className = 'flex flex-col items-center space-y-1 text-cyan-400';
+            } else if (tab === 'my-qr') {
+                document.getElementById('page-my-qr').classList.remove('hidden');
+                document.getElementById('nav-my-qr').className = 'flex flex-col items-center space-y-1 text-cyan-400';
+            } else if (tab === 'transfer') {
+                document.getElementById('page-transfer').classList.remove('hidden');
+            } else if (tab === 'history') {
+                document.getElementById('page-history').classList.remove('hidden');
+                document.getElementById('nav-history').className = 'flex flex-col items-center space-y-1 text-cyan-400';
+            }
